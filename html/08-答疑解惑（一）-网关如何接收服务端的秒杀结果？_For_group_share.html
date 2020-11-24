@@ -1,0 +1,1280 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>08-答疑解惑（一）-网关如何接收服务端的秒杀结果？</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style>
+        html {
+            color: #333;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-rendering: optimizelegibility;
+            font-family: Helvetica Neue, PingFang SC, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif
+        }
+
+        html.borderbox *,
+        html.borderbox :after,
+        html.borderbox :before {
+            box-sizing: border-box
+        }
+
+        article,
+        aside,
+        blockquote,
+        body,
+        button,
+        code,
+        dd,
+        details,
+        dl,
+        dt,
+        fieldset,
+        figcaption,
+        figure,
+        footer,
+        form,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        header,
+        hr,
+        input,
+        legend,
+        li,
+        menu,
+        nav,
+        ol,
+        p,
+        pre,
+        section,
+        td,
+        textarea,
+        th,
+        ul {
+            margin: 0;
+            padding: 0
+        }
+
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        menu,
+        nav,
+        section {
+            display: block
+        }
+
+        audio,
+        canvas,
+        video {
+            display: inline-block
+        }
+
+        body,
+        button,
+        input,
+        select,
+        textarea {
+            font: 300 1em/1.8 PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, Helvetica, sans-serif
+        }
+
+        button::-moz-focus-inner,
+        input::-moz-focus-inner {
+            padding: 0;
+            border: 0
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        fieldset,
+        img {
+            border: 0
+        }
+
+        blockquote {
+            position: relative;
+            color: #999;
+            font-weight: 400;
+            border-left: 1px solid #1abc9c;
+            padding-left: 1em;
+            margin: 1em 3em 1em 2em
+        }
+
+        @media only screen and (max-width: 640px) {
+            blockquote {
+                margin: 1em 0
+            }
+        }
+
+        abbr,
+        acronym {
+            border-bottom: 1px dotted;
+            font-variant: normal
+        }
+
+        abbr {
+            cursor: help
+        }
+
+        del {
+            text-decoration: line-through
+        }
+
+        address,
+        caption,
+        cite,
+        code,
+        dfn,
+        em,
+        th,
+        var {
+            font-style: normal;
+            font-weight: 400
+        }
+
+        ol,
+        ul {
+            list-style: none
+        }
+
+        caption,
+        th {
+            text-align: left
+        }
+
+        q:after,
+        q:before {
+            content: ""
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative
+        }
+
+        :root sub,
+        :root sup {
+            vertical-align: baseline
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        a {
+            color: #1abc9c
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .typo a {
+            border-bottom: 1px solid #1abc9c
+        }
+
+        .typo a:hover {
+            border-bottom-color: #555;
+            color: #555
+        }
+
+        .typo a:hover,
+        a,
+        ins {
+            text-decoration: none
+        }
+
+        .typo-u,
+        u {
+            text-decoration: underline
+        }
+
+        mark {
+            background: #fffdd1;
+            border-bottom: 1px solid #ffedce;
+            padding: 2px;
+            margin: 0 5px
+        }
+
+        code,
+        pre,
+        pre tt {
+            font-family: Courier, Courier New, monospace
+        }
+
+        pre {
+            background: hsla(0, 0%, 97%, .7);
+            border: 1px solid #ddd;
+            padding: 1em 1.5em;
+            display: block;
+            -webkit-overflow-scrolling: touch
+        }
+
+        hr {
+            border: none;
+            border-bottom: 1px solid #cfcfcf;
+            margin-bottom: .8em;
+            height: 10px
+        }
+
+        .typo-small,
+        figcaption,
+        small {
+            font-size: .9em;
+            color: #888
+        }
+
+        b,
+        strong {
+            font-weight: 700;
+            color: #000
+        }
+
+        [draggable] {
+            cursor: move
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .clearfix {
+            zoom: 1
+        }
+
+        .textwrap,
+        .textwrap td,
+        .textwrap th {
+            word-wrap: break-word;
+            word-break: break-all
+        }
+
+        .textwrap-table {
+            table-layout: fixed
+        }
+
+        .serif {
+            font-family: Palatino, Optima, Georgia, serif
+        }
+
+        .typo-dl,
+        .typo-form,
+        .typo-hr,
+        .typo-ol,
+        .typo-p,
+        .typo-pre,
+        .typo-table,
+        .typo-ul,
+        .typo dl,
+        .typo form,
+        .typo hr,
+        .typo ol,
+        .typo p,
+        .typo pre,
+        .typo table,
+        .typo ul,
+        blockquote {
+            margin-bottom: 1rem
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: PingFang SC, Helvetica Neue, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+            color: #000;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo-h2,
+        .typo-h3,
+        .typo-h4,
+        .typo-h5,
+        .typo-h6,
+        .typo h1,
+        .typo h2,
+        .typo h3,
+        .typo h4,
+        .typo h5,
+        .typo h6 {
+            margin-top: 1.2em;
+            margin-bottom: .6em;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo h1 {
+            font-size: 2em
+        }
+
+        .typo-h2,
+        .typo h2 {
+            font-size: 1.8em
+        }
+
+        .typo-h3,
+        .typo h3 {
+            font-size: 1.6em
+        }
+
+        .typo-h4,
+        .typo h4 {
+            font-size: 1.4em
+        }
+
+        .typo-h5,
+        .typo-h6,
+        .typo h5,
+        .typo h6 {
+            font-size: 1.2em
+        }
+
+        .typo-ul,
+        .typo ul {
+            margin-left: 1.3em;
+            list-style: disc
+        }
+
+        .typo-ol,
+        .typo ol {
+            list-style: decimal;
+            margin-left: 1.9em
+        }
+
+        .typo-ol ol,
+        .typo-ol ul,
+        .typo-ul ol,
+        .typo-ul ul,
+        .typo li ol,
+        .typo li ul {
+            margin-bottom: .8em;
+            margin-left: 2em
+        }
+
+        .typo-ol ul,
+        .typo-ul ul,
+        .typo li ul {
+            list-style: circle
+        }
+
+        .typo-table td,
+        .typo-table th,
+        .typo table caption,
+        .typo table td,
+        .typo table th {
+            border: 1px solid #ddd;
+            padding: .5em 1em;
+            color: #666
+        }
+
+        .typo-table th,
+        .typo table th {
+            background: #fbfbfb
+        }
+
+        .typo-table thead th,
+        .typo table thead th {
+            background: hsla(0, 0%, 95%, .7)
+        }
+
+        .typo table caption {
+            border-bottom: none
+        }
+
+        .typo-input,
+        .typo-textarea {
+            -webkit-appearance: none;
+            border-radius: 0
+        }
+
+        .typo-em,
+        .typo em,
+        caption,
+        legend {
+            color: #000;
+            font-weight: inherit
+        }
+
+        .typo-em {
+            position: relative
+        }
+
+        .typo-em:after {
+            position: absolute;
+            top: .65em;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            content: "\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB"
+        }
+
+        .typo img {
+            max-width: 100%
+        }
+
+        .common-content {
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.75rem;
+            white-space: normal;
+            word-break: normal;
+            font-size: 1rem
+        }
+
+        .common-content img {
+            display: block;
+            max-width: 100%;
+            background-color: #eee
+        }
+
+        .common-content audio,
+        .common-content video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        .common-content center,
+        .common-content font {
+            margin-top: 1rem;
+            display: inline-block
+        }
+
+        .common-content center {
+            width: 100%
+        }
+
+        .common-content pre {
+            margin-top: 1rem;
+            padding-left: 0;
+            padding-right: 0;
+            position: relative;
+            overflow: hidden
+        }
+
+        .common-content pre code {
+            font-size: .8rem;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            overflow-x: auto
+        }
+
+        .common-content hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        .common-content b,
+        .common-content h1,
+        .common-content h2,
+        .common-content h3,
+        .common-content h4,
+        .common-content h5,
+        .common-content strong {
+            font-weight: 700
+        }
+
+        .common-content h1,
+        .common-content h2 {
+            font-size: 1.125rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content h3,
+        .common-content h4,
+        .common-content h5 {
+            font-size: 1rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: .15rem
+        }
+
+        .common-content .orange {
+            color: #ff5a05
+        }
+
+        .common-content .reference {
+            font-size: 1rem;
+            color: #888
+        }
+
+        .custom-rich-content h1 {
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 15.25px;
+            border-bottom: 1px solid #eee;
+            line-height: 2.8
+        }
+
+        .custom-rich-content li,
+        .custom-rich-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6
+        }
+
+        table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        table.hljs-ln,
+        table.hljs-ln tbody,
+        table.hljs-ln td,
+        table.hljs-ln tr {
+            box-sizing: border-box
+        }
+
+        table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none
+        }
+
+        table.hljs-ln td.hljs-ln-code,
+        table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            font-size: 12px;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            color: #24292e;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+        video::-webkit-media-controls {
+            overflow: hidden !important
+        }
+
+        video::-webkit-media-controls-enclosure {
+            width: calc(100% + 32px);
+            margin-left: auto
+        }
+
+        ._29HP61GA_0 {
+            max-width:800px;
+            margin:0 auto;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.76;
+            white-space: normal;
+            word-break: normal;
+            font-size: 17px;
+            -webkit-transition: background-color .3s ease;
+            transition: background-color .3s ease
+        }
+
+        ._29HP61GA_0 .MathJax_Display {
+            overflow: auto
+        }
+
+        ._29HP61GA_0 .poster {
+            position: fixed;
+            left: -10000px;
+            top: -10000px;
+            overflow: hidden;
+            padding: 1rem;
+            background: #ececec
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy {
+            font-size: 13px;
+            color: #888;
+            position: absolute;
+            right: 1em;
+            top: .5em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy .iconfont {
+            font-size: 12px;
+            margin-right: .2em
+        }
+
+        ._29HP61GA_0 a {
+            color: #fa8919;
+            border-bottom: 1px solid #fa8919
+        }
+
+        ._29HP61GA_0 img {
+            display: block;
+            max-width: 100%;
+            position: relative;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            background-color: #eee;
+            vertical-align: top;
+            border-radius: 0
+        }
+
+        ._29HP61GA_0 audio,
+        ._29HP61GA_0 video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        ._29HP61GA_0 pre {
+            margin-top: 16px;
+            padding: 34px 0 0;
+            margin-bottom: 30px;
+            position: relative;
+            border-radius: 6px;
+            background: rgba(246, 247, 251, .749);
+            border: 0
+        }
+
+        ._29HP61GA_0 pre code {
+            font-size: 12px;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin-left: 16px;
+            margin-right: 16px;
+            overflow-x: scroll
+        }
+
+        ._29HP61GA_0 pre code:after {
+            content: "";
+            height: 30px;
+            width: 100%;
+            display: block
+        }
+
+        ._29HP61GA_0 hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        ._29HP61GA_0 h1,
+        ._29HP61GA_0 h2,
+        ._29HP61GA_0 h3,
+        ._29HP61GA_0 h4,
+        ._29HP61GA_0 h5 {
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 b,
+        ._29HP61GA_0 strong {
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 h1 {
+            font-size: 21px
+        }
+
+        ._29HP61GA_0 h2 {
+            font-size: 20px
+        }
+
+        ._29HP61GA_0 h3 {
+            font-size: 19px
+        }
+
+        ._29HP61GA_0 h4 {
+            font-size: 18px
+        }
+
+        ._29HP61GA_0 h5 {
+            font-size: 17px
+        }
+
+        ._29HP61GA_0 center,
+        ._29HP61GA_0 p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: 0;
+            margin-bottom: 30px;
+            word-break: break-word
+        }
+
+        ._29HP61GA_0 center {
+            text-align: center
+        }
+
+        ._29HP61GA_0 blockquote {
+            margin-top: 0;
+            margin-bottom: 34px;
+            border-left: 3px solid #e8e8e8;
+            padding-left: 17px;
+            color: #353535
+        }
+
+        ._29HP61GA_0 blockquote p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol,
+        ._29HP61GA_0 ul {
+            margin-bottom: 30px
+        }
+
+        ._29HP61GA_0 ol p,
+        ._29HP61GA_0 ul p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol {
+            list-style: decimal;
+            margin-left: 20px
+        }
+
+        ._29HP61GA_0 ul li {
+            padding-left: 17px;
+            position: relative;
+            margin-bottom: 10px
+        }
+
+        ._29HP61GA_0 ul li:after {
+            content: "";
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background: #353535;
+            position: absolute;
+            top: 10px;
+            left: 0
+        }
+
+        ._29HP61GA_0 .orange {
+            color: #fa8919
+        }
+
+        ._29HP61GA_0 .reference {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-right {
+            text-align: right
+        }
+
+        ._29HP61GA_0 .m-center {
+            text-align: center;
+            display: block
+        }
+
+        ._29HP61GA_0 .m-gray {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-small {
+            font-size: 15px
+        }
+
+        ._29HP61GA_0 table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        ._29HP61GA_0 table.hljs-ln,
+        ._29HP61GA_0 table.hljs-ln tbody,
+        ._29HP61GA_0 table.hljs-ln td,
+        ._29HP61GA_0 table.hljs-ln tr {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        ._29HP61GA_0 table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            font-size: 12px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code,
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            font-size: 13px;
+            color: #666;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+    </style>
+</head>
+<body>
+<div class="_29HP61GA_0">
+<h1>08-答疑解惑（一）-网关如何接收服务端的秒杀结果？</h1>
+<p>你好，我是李玥。</p><p>我们的“消息队列高手课”专栏自从上线到现在，同学们的学习热情和参与度都非常高。每一节课都有很多同学留言评论，这些留言里有总结知识分享收获的，有提出精彩问题的，还有给自己加油打气立Flag的，竟然还有说老师长得像黄渤的。我又仔细去看了一下配图，还是真挺像的。下次老师和极客时间的设计师小姐姐说一样，让她们照着吴彦祖来P图。</p><p>同学们每一条的留言我都认真看过，大部分留言我都给出了回复。在基础篇的最后一节课，我来统一解答一下大家都比较关注的一些问题。</p><h2>1. 网关如何接收服务端的秒杀结果？</h2><p>在《<a href="https://time.geekbang.org/column/article/109572">01 | 为什么需要消息队列？</a>》这节课里面，我们举了一个秒杀的例子，这个例子是用来说明消息队列是如何来实现异步处理的。课后很多同学留言提问，网关在发送消息之后，是如何来接收后端服务的秒杀结果，又如何来给APP返回响应的呢？</p><p>在解答这个问题之前，我需要先说一下，实际生产环境中的秒杀系统，远比我们举的这个例子复杂得多，实现方案也是多种多样的，不是说一定要按照我们这个例子的方式来实现。</p><p>在这个例子中，网关接收后端服务秒杀结果，实现的方式也不只一种，这里我给大家提供一个比较简单的方案。</p><p>比如说，用Java语言来举例子：</p><!-- [[[read_end]]] --><pre><code>public class RequestHandler {
+  
+  // ID生成器
+  @Inject
+  private IdGenerator idGenerator;
+  // 消息队列生产者
+  @Inject
+  private Producer producer;
+  // 保存秒杀结果的Map
+  @Inject
+  private Map&lt;Long, Result&gt; results;
+
+  // 保存mutex的Map
+  private Map&lt;Long, Object&gt; mutexes = new ConcurrentHashMap&lt;&gt;();
+  // 这个网关实例的ID
+  @Inject
+  private long myId;
+
+  @Inject
+  private long timeout;
+
+  // 在这里处理APP的秒杀请求
+  public Response onRequest(Request request) {
+    // 获取一个进程内唯一的UUID作为请求id
+    Long uuid = idGenerator.next();
+    try {
+
+      Message msg = composeMsg(request, uuid, myId);
+
+      // 生成一个mutex，用于等待和通知
+      Object mutex = new Object();
+      mutexes.put(uuid, mutex)
+
+      // 发消息
+      producer.send(msg);
+
+      // 等待后端处理
+      synchronized(mutex) {
+        mutex.wait(timeout);
+      }
+
+      // 查询秒杀结果
+      Result result = results.remove(uuid);
+
+      // 检查秒杀结果并返回响应
+      if(null != result &amp;&amp; result.success()){
+        return Response.success();
+      }
+
+    } catch (Throwable ignored) {}
+    finally {
+      mutexes.remove(uuid);
+    }
+    // 返回秒杀失败
+    return Response.fail();
+  }
+
+  // 在这里处理后端服务返回的秒杀结果
+  public void onResult(Result result) {
+
+    Object mutex = mutexes.get(result.uuid());
+    if(null != mutex) { // 如果查询不到，说明已经超时了，丢弃result即可。
+      // 登记秒杀结果
+      results.put(result.uuid(), result);
+      // 唤醒处理APP请求的线程
+      synchronized(mutex) {
+        mutex.notify();
+      }
+    }
+  }
+}
+</code></pre><p>在这个方案中，网关在收到APP的秒杀请求后，直接给消息队列发消息。至于消息的内容，并不一定是APP请求的Request，只要包含足够的字段就行了，比如用户ID、设备ID、请求时间等等。另外，还需要包含这个请求的ID和网关的ID，这些后面我们会用到。</p><p>如果发送消息失败，可以直接给APP返回秒杀失败结果，成功发送消息之后，线程就阻塞等待秒杀结果。这里面不可能无限等待下去，需要设定一个等待的超时时间。</p><p>等待结束之后，去存放秒杀结果的Map中查询是否有返回的秒杀结果，如果有就构建Response，给APP返回秒杀结果，如果没有，按秒杀失败处理。</p><p>这是处理APP请求的线程，接下来我们来看一下，网关如何来接收从后端秒杀服务返回的秒杀结果。</p><p>我们可以选择用RPC的方式来返回秒杀结果，这里网关节点是RPC服务端，后端服务为客户端。之前网关发出去的消息中包含了网关的ID，后端服务可以通过这个网关ID来找到对应的网关实例，秒杀结果中需要包含请求ID，这个请求ID也是从消息中获取的。</p><p>网关收到后端服务的秒杀结果之后，用请求ID为Key，把这个结果保存到秒杀结果的Map中，然后通知对应的处理APP请求的线程，结束等待。我刚刚说过，处理APP请求的线程，在结束等待之后，会去秒杀的结果Map中查询这个结果，然后再给APP返回响应。</p><p>这个解决方案还不是一个性能最优的方案，处理APP请求的线程需要同步等待秒杀结果。后面课程中我们会专门来讲，如何使用异步方式来提升程序的性能。</p><h2>2. 详解RocketMQ和Kafka的消息模型</h2><p>我在看《<a href="http://time.geekbang.org/column/article/110459">03 | 消息模型：主题和队列有什么区别？</a>》这节课的留言时发现，不少同学对RocketMQ和kafka的消息模型理解的还不是很透彻，这两个消息队列产品的消息模型是一样的，我在这里，再把这个模型相关的概念，通过一个例子详细地说一说。</p><p>假设有一个主题MyTopic，我们为主题创建5个队列，分布到2个Broker中。</p><p><img src="https://static001.geekbang.org/resource/image/dd/2f/dd3f4c5e40f58b62c2d89554b579a72f.jpg" alt=""></p><p>先说消息生产这一端，假设我们有3个生产者实例：Produer0，Produer1和Producer2。</p><p>这3个生产者是如何对应到2个Broker的，又是如何对应到5个队列的呢？这个很简单，<strong>不用对应，随便发</strong>。每个生产者可以在5个队列中轮询发送，也可以随机选一个队列发送，或者只往某个队列发送，这些都可以。比如Producer0要发5条消息，可以都发到队列Q0里面，也可以5个队列每个队列发一条。</p><p>然后说消费端，很多同学没有搞清楚消费组、消费者和队列这几个概念的对应关系。</p><p>每个消费组就是一份订阅，它要消费主题MyTopic下，所有队列的全部消息。注意，队列里的消息并不是消费掉就没有了，这里的“消费”，只是去队列里面读了消息，并没有删除，消费完这条消息还是在队列里面。</p><p>多个消费组在消费同一个主题时，消费组之间是互不影响的。比如我们有2个消费组：G0和G1。G0消费了哪些消息，G1是不知道的，也不用知道。G0消费过的消息，G1还可以消费。即使G0积压了很多消息，对G1来说也没有任何影响。</p><p>然后我们再说消费组的内部，一个消费组中可以包含多个消费者的实例。比如说消费组G1，包含了2个消费者C0和C1，那这2个消费者又是怎么和主题MyTopic的5个队列对应的呢？</p><p>由于消费确认机制的限制，这里面有一个原则是，在同一个消费组里面，每个队列只能被一个消费者实例占用。至于如何分配，这里面有很多策略，我就不展开说了。总之保证每个队列分配一个消费者就行了。比如，我们可以让消费者C0消费Q0，Q1和Q2，C1消费Q3和Q4，如果C0宕机了，会触发重新分配，这时候C1同时消费全部5个队列。</p><p>再强调一下，队列占用只是针对消费组内部来说的，对于其他的消费组来说是没有影响的。比如队列Q2被消费组G1的消费者C1占用了，对于消费组G2来说，是完全没有影响的，G2也可以分配它的消费者来占用和消费队列Q2。</p><p>最后说一下消费位置，每个消费组内部维护自己的一组消费位置，每个队列对应一个消费位置。消费位置在服务端保存，并且，<strong>消费位置和消费者是没有关系的</strong>。每个消费位置一般就是一个整数，记录这个消费组中，这个队列消费到哪个位置了，这个位置之前的消息都成功消费了，之后的消息都没有消费或者正在消费。</p><p>我把咱们这个例子的消费位置整理成下面的表格，便于你理解。</p><p><img src="https://static001.geekbang.org/resource/image/c0/72/c028410cbab5e9d8749361866b930f72.jpg" alt=""></p><p>你可以看到，这个表格中并没有消费者这一列，也就是说消费者和消费位置是没有关系的。</p><h2>3. 如何实现单个队列的并行消费？</h2><p>下面说一下《<a href="http://time.geekbang.org/column/article/110459">03 | 消息模型：主题和队列有什么区别？</a>》这节课的思考题：如果不要求严格顺序，如何实现单个队列的并行消费？关于这个问题，有很多的实现方式，在JMQ（京东自研的消息队列产品）中，它实现的思路是这样的。</p><p>比如说，队列中当前有10条消息，对应的编号是0-9，当前的消费位置是5。同时来了三个消费者来拉消息，把编号为5、6、7的消息分别给三个消费者，每人一条。过了一段时间，三个消费成功的响应都回来了，这时候就可以把消费位置更新为8了，这样就实现并行消费。</p><p>这是理想的情况。还有可能编号为6、7的消息响应回来了，编号5的消息响应一直回不来，怎么办？这个位置5就是一个消息空洞。为了避免位置5把这个队列卡住，可以先把消费位置5这条消息，复制到一个特殊重试队列中，然后依然把消费位置更新为8，继续消费。再有消费者来拉消息的时候，优先把重试队列中的那条消息给消费者就可以了。</p><p>这是并行消费的一种实现方式。需要注意的是，并行消费开销还是很大的，不应该作为一个常规的，提升消费并发的手段，如果消费慢需要增加消费者的并发数，还是需要扩容队列数。</p><h2>4. 如何保证消息的严格顺序？</h2><p>很多同学在留言中问，怎么来保证消息的严格顺序？我们多次提到过，主题层面是无法保证严格顺序的，只有在队列上才能保证消息的严格顺序。</p><p>如果说，你的业务必须要求全局严格顺序，就只能把消息队列数配置成1，生产者和消费者也只能是一个实例，这样才能保证全局严格顺序。</p><p>大部分情况下，我们并不需要全局严格顺序，只要保证局部有序就可以满足要求了。比如，在传递账户流水记录的时候，只要保证每个账户的流水有序就可以了，不同账户之间的流水记录是不需要保证顺序的。</p><p>如果需要保证局部严格顺序，可以这样来实现。在发送端，我们使用账户ID作为Key，采用一致性哈希算法计算出队列编号，指定队列来发送消息。一致性哈希算法可以保证，相同Key的消息总是发送到同一个队列上，这样可以保证相同Key的消息是严格有序的。如果不考虑队列扩容，也可以用队列数量取模的简单方法来计算队列编号。</p><h2>写在最后</h2><p>在留言中，很多同学留言提出来，能不能讲一讲某个消息队列的某个功能具体如何配置。我的建议是，你先不要太关注功能、API和配置这些细节，在学习如何使用消息队列的过程中，要保持一定的高度来学习。</p><p>因为使用消息队列，大部分的难点在宏观架构层面，要解决这些难点，你需要掌握消息队列宏观层面上的实现原理和最佳实践，这样，无论你使用什么消息队列，都可以做到游刃有余。在选定了合适的消息队列产品，准备写代码之前，再去文档中查看这些细节都来得及。</p><p>所以，我们专栏的“基础篇”讲消息队列的使用，更多讲的是一些通用的原理。这节课是我们消息队列高手课“基础篇”的最后一节课，完整基础篇的学习后，意味着你已经是一个使用消息队列的小达人了。</p><p>在“进阶篇”中，我们将把学习重点从“如何使用”转为“如何实现”，在学习消息队列的实现技术时，你反而要专注到每一个技术点上，深入下去，把每个细节都要搞清楚、学透。课程的深度、难度也会逐步加强，当然你获得的经验值也会更多。</p><p>希望大家一如既往坚持学习，多思考，多练习，跟老师一起打怪升级，成为真正的高手。</p><p>感谢阅读，如果你觉得这篇文章对你有帮助的话，也欢迎把它分享给你的朋友。</p><p><img src="https://static001.geekbang.org/resource/image/de/23/de0a489e6b4fa9a49450bf9197593423.jpg" alt=""></p><h2>精选留言：</h2>
+        <ul>
+        
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            大龄小学生  2019-08-08 08:10:58
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            老师，一图胜千言，来点图吧。 [4赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            Abyssal  2019-08-08 00:11:08
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            七夕不过节，继续学习 —— 谁让我是单身狗呢 [4赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            Mark Yao  2019-08-08 20:27:02
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            受益老师说的先宏观在微观深入，同时做事不需要整体有序，达到局部有序即可。 [1赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            明日  2019-08-08 17:12:51
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            老师，关于事务消息的ACID那个问题没有提到，能不能找机会说下你的看法？个人的看法是没有实现隔离性，一致性只能保证最终一致，而原子操作和持久化可以通过各种手段实现。 [1赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 22:30:05</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">严格的说，ACI都没实现，只有D实现了。<br><br>放宽点儿限制的话，或者考虑实际效果的话，A（原子性）绝大多数情况下还是可以保证的，即“要么都成功，要么都失败”。C（一致性）通过补偿，大部分情况下也可以保证最终一致。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            公号：猿人谷  2019-08-08 11:31:54
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            这篇答疑解惑，虽然简短，但绝对的诚意十足。希望多出这种答疑解惑的章节，毕竟评论区里很多留言的问题非常有代表性，对代表性的问题出这种答疑解惑的章节，学到的更多，也更能体现大家的参与度。 [1赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            linqw  2019-08-08 10:52:50
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            学习完网关答疑篇，写下自己的理解和疑惑，老师有空帮忙看下哦<br>1、秒杀的理解:<br>APP--发送秒杀请求--》网关（也是RPC服务端，和配置中心保持长连接，比如nacos，将其路由和配置信息定时的发送给配置中心，配置中心对其进行管理，定时的清除宕机的网关路由信息，如超过一定时间没有接收到网关的心跳包）--》将其APP请求做一定的封装，增加网关id和网关实例中唯一的请求id发送给消息队列，为了保证消息不丢失，网关对其发送消息出现的异常进行处理，如超时异常，直接返回秒杀失败，网关发送消息的这个过程中可能涉及到分布式事务，使用消息队列的分布式事务进行处理，然后网关需要等待一段时间，等待秒杀服务端使用RPC调用网关实例的接收秒杀结果，为此创建一个新对象，将其请求id做为key，新对象做为value放入CurrentMap中，调用新对象的超时wait方法进行等待秒杀结果--发送封装的APP请求，包含网关id和请求id--》消息队列接收APP请求消息，为了保证消息不丢失，开启Sync_Flush参数将消息保存到磁盘，并且为了防止一台机器磁盘出问题，集群需要2台机器都有消息才确认请求--从消息队列中拉取消息--》秒杀服务端，为了低延迟执行风控、预占库存，拿到消息中网关id，从本地路由中查询网关id的实例信息，如果获取不到调用网关实例时，需先从配置中心获取到网关的路由信息，秒杀服务端也需和配置中心保持长连接，定时的从配置中心拉取网关的路由信息，保存到本地，使用RPC调用网关实例的接收秒杀结果的方法，为了保证消息不丢失，先执行消费逻辑，再响应消息队列，如果根据网关id获取不到网关实例，或者确认消息队列超时或出现异常，秒杀服务端回滚事务，此过程也涉及到分布式事务，为了防止消费重复消息，接口的幂等性，将请求id和网关id做为唯一键。也为了防止消息积压，消息队列中的主题队列和消费组中的消费者一一对应，保证消息被快速消费。<br>2、秒杀异步，APP发送请求给网关，网关接收请求后将请求做一定的封装（包括请求id，网关id，账户id），然后发送到消息队列中，响应APP请求，无需等待后需的流程，然后秒杀成功以否直接返回，后续流程处理完使用短信的形式告知用户是否秒杀成功，不知道这样做法是否可行。<br>3、最近在撸rocketmq的源码，搞了namesrv、logging、logappend模块，想成为commiter，立个flag，等后续JMQ出来，撸其源码，也想成为commiter，道阻且长，持续进化。 [1赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 12:52:06</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">我认真的看了同学的对于秒杀的理解，技术上都没什么问题。<br><br>从业务角度，老师有一些不同的看法。<br><br>对于秒杀这种场景，宏观上的设计应该是倾向于利用有限的资源处理短时间内海量的请求，保证服务不宕机。有少量请求处理出错（注意是后端错误，用户不可见）或消息丢失，是可以接受的。<br><br>毕竟秒杀拼的就是运气，某个用户秒杀请求在处理的时候丢失，和处理成功但没秒到，对于用户来说都是运气不好而已。<br><br>基于这样的设计理念，很多保证数据可靠性的做法都可以牺牲掉，用于换取系统更大的吞吐量比较划算。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            业余草  2019-08-08 08:44:57
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            相对来说，哪一个消息队列的学习成本较高？ [1赞]
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 12:39:40</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">我觉得是Kafka吧，功能足够复杂，而且老外写代码的脑回路和我们不大一样。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            miniluo  2019-08-09 07:49:19
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            老师我有2个疑问需要麻烦您解答。<br>Q1、文中秒杀，等待网关响应时timeout，而此时后端又刚好在消费该请求，那怎么timeout是否需要通知回滚？<br>Q2、有同学提到按顺序执行的队列，执行某消息失败，则将该消息放入重试队列。若顺序执行非常严格的业务场景，例如审批流程；怎么确保顺序结果是正确的？盼回，谢谢 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            Better me  2019-08-08 22:51:27
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            老师前面说的保证每个队列只分配一个消费者，和实现单个队列的并行消费这里会不会冲突，还是这里可以另外配置改变这种分配策略？ 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            大白先生  2019-08-08 21:09:52
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            对于这句话我不是很理解，还请老师帮忙解答。“队列中当前有 10 条消息，对应的编号是 0-9，当前的消费位置是 5。同时来了三个消费者来拉消息，把编号为 5、6、7 的消息分别给三个消费者，每人一条。”一个消费队列在一个消费组内不是只有一个消费者可以消费消息么，怎么能够同时来拉消息。如果您说的三个消费者是三个消费组的话，每个消费组维护自己的消费位置都是5，那么消费的都会是编号5的消息呀。 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 22:14:18</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">我们不是在考虑如何来实现并行消费么？就不能再遵循现有的串行消费的限制了呀。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            QQ怪  2019-08-08 21:03:53
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            打卡中 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            oscarwin  2019-08-08 20:18:59
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            学习消息队列要从一定的高度来学，这句话不能同意的更多了。希望看完老师的课程，自己能尝试实现一个消息队列。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            skyun  2019-08-08 19:41:12
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            关于顺序消息还是有点疑问，考虑一下几个场景：<br>1、消息消费失败进入了重试队列；<br>2、增加或减少了消费者组里的消费者个数，导致consumer与queue之间的对应关系重新映射；<br>3、broker节点故障或者超时导致投递失败，业务上重新选择broker投递<br>这几种场景下，即使在投递时通过selector进行选择了queue，我想依旧会导致消息的乱序，请教下老师，这对在这些场景下，得分别采用怎么样的方式来保证消息的有序性。问题有点多，麻烦老师了 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 22:22:17</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">a1：这个只能关闭重试队列。<br>a2: consumer rebalance不会影响到消费顺序，因为对于单个队列来说，无论是不是rebalance，都是串行消费的。<br>a3：这个无需担心，也不用做任何处理，消息队列自身可以保证即使broker宕机发生切换，依然保证队列中消息的顺序不会变。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            朱振光  2019-08-08 17:22:53
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            rabbitmq可以实现类似topic和消费组的概念吗？ 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 22:26:51</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">可以通过exchange路由到多个消费队列来变相实现，具体可以看下文档：<br><br>https:&#47;&#47;www.rabbitmq.com&#47;tutorials&#47;tutorial-three-python.html</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            A:春哥大魔王  2019-08-08 17:01:44
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            看了几期，感觉分布式消息队列的设计方案和分布式存储系统的设计方案很类似，如果再加上事务处理，存储细节方案应该更像了 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 22:31:06</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">同学那不是像，消息队列就是个分布式存储系统。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            许童童  2019-08-08 11:58:11
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            跟老师一起打怪升级，成为真正的高手。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            海罗沃德  2019-08-08 10:30:18
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            JMQ把消息空洞放在特殊位置的操作像极了AWS SQS的sqs dead letter queue，不知道是不是用的同一种设计思路？ 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            陈泽坛  2019-08-08 10:13:15
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            ^_^    打卡          <br>老师讲得很好很清晰，感谢 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            Loren  2019-08-08 10:06:51
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+                  &#47;&#47; 等待后端处理<br>      synchronized(mutex) {<br>        mutex.wait(timeout);<br>      } 这个是不是不用加锁？ 
+        </div>
+        <br/>
+<div>
+    <div style="color:#888;font-size:15.25px;font-weight:400;line-height:1.2">作者回复2019-08-08 12:42:43</div>
+    <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">这个synchronized是必须加的，你可以看一下wait的JavaDoc。</div>
+</div>
+            
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            广训  2019-08-08 09:25:38
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            你已经是一个使用消息队列的小达人了。 
+        </div>
+        
+    </div>
+</li>
+            </ul>
+</div>
+</body>
+</html>

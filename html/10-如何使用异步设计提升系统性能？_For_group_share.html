@@ -1,0 +1,1198 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title>10-如何使用异步设计提升系统性能？</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+        <style>
+        html {
+            color: #333;
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+            text-rendering: optimizelegibility;
+            font-family: Helvetica Neue, PingFang SC, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif
+        }
+
+        html.borderbox *,
+        html.borderbox :after,
+        html.borderbox :before {
+            box-sizing: border-box
+        }
+
+        article,
+        aside,
+        blockquote,
+        body,
+        button,
+        code,
+        dd,
+        details,
+        dl,
+        dt,
+        fieldset,
+        figcaption,
+        figure,
+        footer,
+        form,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        header,
+        hr,
+        input,
+        legend,
+        li,
+        menu,
+        nav,
+        ol,
+        p,
+        pre,
+        section,
+        td,
+        textarea,
+        th,
+        ul {
+            margin: 0;
+            padding: 0
+        }
+
+        article,
+        aside,
+        details,
+        figcaption,
+        figure,
+        footer,
+        header,
+        menu,
+        nav,
+        section {
+            display: block
+        }
+
+        audio,
+        canvas,
+        video {
+            display: inline-block
+        }
+
+        body,
+        button,
+        input,
+        select,
+        textarea {
+            font: 300 1em/1.8 PingFang SC, Lantinghei SC, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, Helvetica, sans-serif
+        }
+
+        button::-moz-focus-inner,
+        input::-moz-focus-inner {
+            padding: 0;
+            border: 0
+        }
+
+        table {
+            border-collapse: collapse;
+            border-spacing: 0
+        }
+
+        fieldset,
+        img {
+            border: 0
+        }
+
+        blockquote {
+            position: relative;
+            color: #999;
+            font-weight: 400;
+            border-left: 1px solid #1abc9c;
+            padding-left: 1em;
+            margin: 1em 3em 1em 2em
+        }
+
+        @media only screen and (max-width: 640px) {
+            blockquote {
+                margin: 1em 0
+            }
+        }
+
+        abbr,
+        acronym {
+            border-bottom: 1px dotted;
+            font-variant: normal
+        }
+
+        abbr {
+            cursor: help
+        }
+
+        del {
+            text-decoration: line-through
+        }
+
+        address,
+        caption,
+        cite,
+        code,
+        dfn,
+        em,
+        th,
+        var {
+            font-style: normal;
+            font-weight: 400
+        }
+
+        ol,
+        ul {
+            list-style: none
+        }
+
+        caption,
+        th {
+            text-align: left
+        }
+
+        q:after,
+        q:before {
+            content: ""
+        }
+
+        sub,
+        sup {
+            font-size: 75%;
+            line-height: 0;
+            position: relative
+        }
+
+        :root sub,
+        :root sup {
+            vertical-align: baseline
+        }
+
+        sup {
+            top: -.5em
+        }
+
+        sub {
+            bottom: -.25em
+        }
+
+        a {
+            color: #1abc9c
+        }
+
+        a:hover {
+            text-decoration: underline
+        }
+
+        .typo a {
+            border-bottom: 1px solid #1abc9c
+        }
+
+        .typo a:hover {
+            border-bottom-color: #555;
+            color: #555
+        }
+
+        .typo a:hover,
+        a,
+        ins {
+            text-decoration: none
+        }
+
+        .typo-u,
+        u {
+            text-decoration: underline
+        }
+
+        mark {
+            background: #fffdd1;
+            border-bottom: 1px solid #ffedce;
+            padding: 2px;
+            margin: 0 5px
+        }
+
+        code,
+        pre,
+        pre tt {
+            font-family: Courier, Courier New, monospace
+        }
+
+        pre {
+            background: hsla(0, 0%, 97%, .7);
+            border: 1px solid #ddd;
+            padding: 1em 1.5em;
+            display: block;
+            -webkit-overflow-scrolling: touch
+        }
+
+        hr {
+            border: none;
+            border-bottom: 1px solid #cfcfcf;
+            margin-bottom: .8em;
+            height: 10px
+        }
+
+        .typo-small,
+        figcaption,
+        small {
+            font-size: .9em;
+            color: #888
+        }
+
+        b,
+        strong {
+            font-weight: 700;
+            color: #000
+        }
+
+        [draggable] {
+            cursor: move
+        }
+
+        .clearfix:after,
+        .clearfix:before {
+            content: "";
+            display: table
+        }
+
+        .clearfix:after {
+            clear: both
+        }
+
+        .clearfix {
+            zoom: 1
+        }
+
+        .textwrap,
+        .textwrap td,
+        .textwrap th {
+            word-wrap: break-word;
+            word-break: break-all
+        }
+
+        .textwrap-table {
+            table-layout: fixed
+        }
+
+        .serif {
+            font-family: Palatino, Optima, Georgia, serif
+        }
+
+        .typo-dl,
+        .typo-form,
+        .typo-hr,
+        .typo-ol,
+        .typo-p,
+        .typo-pre,
+        .typo-table,
+        .typo-ul,
+        .typo dl,
+        .typo form,
+        .typo hr,
+        .typo ol,
+        .typo p,
+        .typo pre,
+        .typo table,
+        .typo ul,
+        blockquote {
+            margin-bottom: 1rem
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6 {
+            font-family: PingFang SC, Helvetica Neue, Verdana, Microsoft Yahei, Hiragino Sans GB, Microsoft Sans Serif, WenQuanYi Micro Hei, sans-serif;
+            color: #000;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo-h2,
+        .typo-h3,
+        .typo-h4,
+        .typo-h5,
+        .typo-h6,
+        .typo h1,
+        .typo h2,
+        .typo h3,
+        .typo h4,
+        .typo h5,
+        .typo h6 {
+            margin-top: 1.2em;
+            margin-bottom: .6em;
+            line-height: 1.35
+        }
+
+        .typo-h1,
+        .typo h1 {
+            font-size: 2em
+        }
+
+        .typo-h2,
+        .typo h2 {
+            font-size: 1.8em
+        }
+
+        .typo-h3,
+        .typo h3 {
+            font-size: 1.6em
+        }
+
+        .typo-h4,
+        .typo h4 {
+            font-size: 1.4em
+        }
+
+        .typo-h5,
+        .typo-h6,
+        .typo h5,
+        .typo h6 {
+            font-size: 1.2em
+        }
+
+        .typo-ul,
+        .typo ul {
+            margin-left: 1.3em;
+            list-style: disc
+        }
+
+        .typo-ol,
+        .typo ol {
+            list-style: decimal;
+            margin-left: 1.9em
+        }
+
+        .typo-ol ol,
+        .typo-ol ul,
+        .typo-ul ol,
+        .typo-ul ul,
+        .typo li ol,
+        .typo li ul {
+            margin-bottom: .8em;
+            margin-left: 2em
+        }
+
+        .typo-ol ul,
+        .typo-ul ul,
+        .typo li ul {
+            list-style: circle
+        }
+
+        .typo-table td,
+        .typo-table th,
+        .typo table caption,
+        .typo table td,
+        .typo table th {
+            border: 1px solid #ddd;
+            padding: .5em 1em;
+            color: #666
+        }
+
+        .typo-table th,
+        .typo table th {
+            background: #fbfbfb
+        }
+
+        .typo-table thead th,
+        .typo table thead th {
+            background: hsla(0, 0%, 95%, .7)
+        }
+
+        .typo table caption {
+            border-bottom: none
+        }
+
+        .typo-input,
+        .typo-textarea {
+            -webkit-appearance: none;
+            border-radius: 0
+        }
+
+        .typo-em,
+        .typo em,
+        caption,
+        legend {
+            color: #000;
+            font-weight: inherit
+        }
+
+        .typo-em {
+            position: relative
+        }
+
+        .typo-em:after {
+            position: absolute;
+            top: .65em;
+            left: 0;
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            content: "\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB\30FB"
+        }
+
+        .typo img {
+            max-width: 100%
+        }
+
+        .common-content {
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.75rem;
+            white-space: normal;
+            word-break: normal;
+            font-size: 1rem
+        }
+
+        .common-content img {
+            display: block;
+            max-width: 100%;
+            background-color: #eee
+        }
+
+        .common-content audio,
+        .common-content video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        .common-content center,
+        .common-content font {
+            margin-top: 1rem;
+            display: inline-block
+        }
+
+        .common-content center {
+            width: 100%
+        }
+
+        .common-content pre {
+            margin-top: 1rem;
+            padding-left: 0;
+            padding-right: 0;
+            position: relative;
+            overflow: hidden
+        }
+
+        .common-content pre code {
+            font-size: .8rem;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            width: 100%;
+            box-sizing: border-box;
+            padding-left: 1rem;
+            padding-right: 1rem;
+            overflow-x: auto
+        }
+
+        .common-content hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        .common-content b,
+        .common-content h1,
+        .common-content h2,
+        .common-content h3,
+        .common-content h4,
+        .common-content h5,
+        .common-content strong {
+            font-weight: 700
+        }
+
+        .common-content h1,
+        .common-content h2 {
+            font-size: 1.125rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content h3,
+        .common-content h4,
+        .common-content h5 {
+            font-size: 1rem;
+            margin-bottom: .45rem
+        }
+
+        .common-content p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: .15rem
+        }
+
+        .common-content .orange {
+            color: #ff5a05
+        }
+
+        .common-content .reference {
+            font-size: 1rem;
+            color: #888
+        }
+
+        .custom-rich-content h1 {
+            margin-top: 0;
+            font-weight: 400;
+            font-size: 15.25px;
+            border-bottom: 1px solid #eee;
+            line-height: 2.8
+        }
+
+        .custom-rich-content li,
+        .custom-rich-content p {
+            font-size: 14px;
+            color: #888;
+            line-height: 1.6
+        }
+
+        table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        table.hljs-ln,
+        table.hljs-ln tbody,
+        table.hljs-ln td,
+        table.hljs-ln tr {
+            box-sizing: border-box
+        }
+
+        table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            user-select: none
+        }
+
+        table.hljs-ln td.hljs-ln-code,
+        table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            font-size: 12px;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            color: #24292e;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+        video::-webkit-media-controls {
+            overflow: hidden !important
+        }
+
+        video::-webkit-media-controls-enclosure {
+            width: calc(100% + 32px);
+            margin-left: auto
+        }
+
+        ._29HP61GA_0 {
+            max-width:800px;
+            margin:0 auto;
+            margin-bottom: 20px;
+            font-weight: 400;
+            color: #353535;
+            line-height: 1.76;
+            white-space: normal;
+            word-break: normal;
+            font-size: 17px;
+            -webkit-transition: background-color .3s ease;
+            transition: background-color .3s ease
+        }
+
+        ._29HP61GA_0 .MathJax_Display {
+            overflow: auto
+        }
+
+        ._29HP61GA_0 .poster {
+            position: fixed;
+            left: -10000px;
+            top: -10000px;
+            overflow: hidden;
+            padding: 1rem;
+            background: #ececec
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy {
+            font-size: 13px;
+            color: #888;
+            position: absolute;
+            right: 1em;
+            top: .5em;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 .richcontent-pre-copy .iconfont {
+            font-size: 12px;
+            margin-right: .2em
+        }
+
+        ._29HP61GA_0 a {
+            color: #fa8919;
+            border-bottom: 1px solid #fa8919
+        }
+
+        ._29HP61GA_0 img {
+            display: block;
+            max-width: 100%;
+            position: relative;
+            left: 50%;
+            -webkit-transform: translateX(-50%);
+            transform: translateX(-50%);
+            background-color: #eee;
+            vertical-align: top;
+            border-radius: 0
+        }
+
+        ._29HP61GA_0 audio,
+        ._29HP61GA_0 video {
+            width: 100%;
+            background-color: #eee
+        }
+
+        ._29HP61GA_0 pre {
+            margin-top: 16px;
+            padding: 34px 0 0;
+            margin-bottom: 30px;
+            position: relative;
+            border-radius: 6px;
+            background: rgba(246, 247, 251, .749);
+            border: 0
+        }
+
+        ._29HP61GA_0 pre code {
+            font-size: 12px;
+            font-family: Consolas, Liberation Mono, Menlo, monospace, Courier;
+            display: block;
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box;
+            margin-left: 16px;
+            margin-right: 16px;
+            overflow-x: scroll
+        }
+
+        ._29HP61GA_0 pre code:after {
+            content: "";
+            height: 30px;
+            width: 100%;
+            display: block
+        }
+
+        ._29HP61GA_0 hr {
+            border: none;
+            margin-top: 1.5rem;
+            margin-bottom: 1.5rem;
+            border-top: 1px solid #f5f5f5;
+            height: 1px;
+            background: none
+        }
+
+        ._29HP61GA_0 h1,
+        ._29HP61GA_0 h2,
+        ._29HP61GA_0 h3,
+        ._29HP61GA_0 h4,
+        ._29HP61GA_0 h5 {
+            margin-bottom: 20px;
+            margin-top: 0;
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 b,
+        ._29HP61GA_0 strong {
+            font-weight: 700
+        }
+
+        ._29HP61GA_0 h1 {
+            font-size: 21px
+        }
+
+        ._29HP61GA_0 h2 {
+            font-size: 20px
+        }
+
+        ._29HP61GA_0 h3 {
+            font-size: 19px
+        }
+
+        ._29HP61GA_0 h4 {
+            font-size: 18px
+        }
+
+        ._29HP61GA_0 h5 {
+            font-size: 17px
+        }
+
+        ._29HP61GA_0 center,
+        ._29HP61GA_0 p {
+            font-weight: 400;
+            color: #353535;
+            margin-top: 0;
+            margin-bottom: 30px;
+            word-break: break-word
+        }
+
+        ._29HP61GA_0 center {
+            text-align: center
+        }
+
+        ._29HP61GA_0 blockquote {
+            margin-top: 0;
+            margin-bottom: 34px;
+            border-left: 3px solid #e8e8e8;
+            padding-left: 17px;
+            color: #353535
+        }
+
+        ._29HP61GA_0 blockquote p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol,
+        ._29HP61GA_0 ul {
+            margin-bottom: 30px
+        }
+
+        ._29HP61GA_0 ol p,
+        ._29HP61GA_0 ul p {
+            margin-top: 0;
+            margin-bottom: 0
+        }
+
+        ._29HP61GA_0 ol {
+            list-style: decimal;
+            margin-left: 20px
+        }
+
+        ._29HP61GA_0 ul li {
+            padding-left: 17px;
+            position: relative;
+            margin-bottom: 10px
+        }
+
+        ._29HP61GA_0 ul li:after {
+            content: "";
+            height: 6px;
+            width: 6px;
+            border-radius: 50%;
+            background: #353535;
+            position: absolute;
+            top: 10px;
+            left: 0
+        }
+
+        ._29HP61GA_0 .orange {
+            color: #fa8919
+        }
+
+        ._29HP61GA_0 .reference {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-right {
+            text-align: right
+        }
+
+        ._29HP61GA_0 .m-center {
+            text-align: center;
+            display: block
+        }
+
+        ._29HP61GA_0 .m-gray {
+            color: #888
+        }
+
+        ._29HP61GA_0 .m-small {
+            font-size: 15px
+        }
+
+        ._29HP61GA_0 table.hljs-ln {
+            margin-bottom: 0;
+            border-spacing: 0;
+            border-collapse: collapse
+        }
+
+        ._29HP61GA_0 table.hljs-ln,
+        ._29HP61GA_0 table.hljs-ln tbody,
+        ._29HP61GA_0 table.hljs-ln td,
+        ._29HP61GA_0 table.hljs-ln tr {
+            -webkit-box-sizing: border-box;
+            box-sizing: border-box
+        }
+
+        ._29HP61GA_0 table.hljs-ln td {
+            padding: 0;
+            border: 0
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            min-width: 15px;
+            font-size: 12px;
+            color: rgba(27, 31, 35, .3);
+            text-align: right;
+            white-space: nowrap;
+            cursor: pointer;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code,
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-numbers {
+            font-family: SFMono-Regular, Consolas, Liberation Mono, Menlo, Courier, monospace;
+            line-height: 20px;
+            vertical-align: top
+        }
+
+        ._29HP61GA_0 table.hljs-ln td.hljs-ln-code {
+            position: relative;
+            padding-right: 10px;
+            padding-left: 10px;
+            overflow: visible;
+            font-size: 13px;
+            color: #666;
+            word-wrap: normal;
+            white-space: pre
+        }
+
+    </style>
+</head>
+<body>
+<div class="_29HP61GA_0">
+<h1>10-如何使用异步设计提升系统性能？</h1>
+<p>你好，我是李玥，这一讲我们来聊一聊异步。</p><p>对于开发者来说，异步是一种程序设计的思想，使用异步模式设计的程序可以显著减少线程等待，从而在高吞吐量的场景中，极大提升系统的整体性能，显著降低时延。</p><p>因此，像消息队列这种需要超高吞吐量和超低时延的中间件系统，在其核心流程中，一定会大量采用异步的设计思想。</p><p>接下来，我们一起来通过一个非常简单的例子学习一下，使用异步设计是如何提升系统性能的。</p><h2>异步设计如何提升系统性能？</h2><p>假设我们要实现一个转账的微服务Transfer( accountFrom, accountTo, amount)，这个服务有三个参数：分别是转出账户、转入账户和转账金额。</p><p>实现过程也比较简单，我们要从账户A中转账100元到账户B中：</p><ol>
+<li>先从A的账户中减去100元；</li>
+<li>再给B的账户加上100元，转账完成。</li>
+</ol><p>对应的时序图是这样的：</p><p><img src="https://static001.geekbang.org/resource/image/3f/58/3f7faf335a9e6c3009902d85b71d3058.jpg" alt=""></p><p>在这个例子的实现过程中，我们调用了另外一个微服务Add(account, amount)，它的功能是给账户account增加金额amount，当amount为负值的时候，就是扣减响应的金额。</p><p>需要特别说明的是，在这段代码中，我为了使问题简化以便我们能专注于异步和性能优化，省略了错误处理和事务相关的代码，你在实际的开发中不要这样做。</p><!-- [[[read_end]]] --><h4>1. 同步实现的性能瓶颈</h4><p>首先我们来看一下同步实现，对应的伪代码如下：</p><pre><code>Transfer(accountFrom, accountTo, amount) {
+  // 先从accountFrom的账户中减去相应的钱数
+  Add(accountFrom, -1 * amount)
+  // 再把减去的钱数加到accountTo的账户中
+  Add(accountFrom, amount)
+  return OK
+}
+</code></pre><p>上面的伪代码首先从accountFrom的账户中减去相应的钱数，再把减去的钱数加到accountTo的账户中，这种同步实现是一种很自然方式，简单直接。那么性能表现如何呢？接下来我们就来一起分析一下性能。</p><p>假设微服务Add的平均响应时延是50ms，那么很容易计算出我们实现的微服务Transfer的平均响应时延大约等于执行2次Add的时延，也就是100ms。那随着调用Transfer服务的请求越来越多，会出现什么情况呢？</p><p>在这种实现中，每处理一个请求需要耗时100ms，并在这100ms过程中是需要独占一个线程的，那么可以得出这样一个结论：每个线程每秒钟最多可以处理10个请求。我们知道，每台计算机上的线程资源并不是无限的，假设我们使用的服务器同时打开的线程数量上限是10,000，可以计算出这台服务器每秒钟可以处理的请求上限是： 10,000 （个线程）* 10（次请求每秒） = 100,000 次每秒。</p><p>如果请求速度超过这个值，那么请求就不能被马上处理，只能阻塞或者排队，这时候Transfer服务的响应时延由100ms延长到了：排队的等待时延 + 处理时延(100ms)。也就是说，在大量请求的情况下，我们的微服务的平均响应时延变长了。</p><p>这是不是已经到了这台服务器所能承受的极限了呢？其实远远没有，如果我们监测一下服务器的各项指标，会发现无论是CPU、内存，还是网卡流量或者是磁盘的IO都空闲的很，那我们Transfer服务中的那10,000个线程在干什么呢？对，绝大部分线程都在等待Add服务返回结果。</p><p>也就是说，<strong>采用同步实现的方式，整个服务器的所有线程大部分时间都没有在工作，而是都在等待。</strong></p><p>如果我们能减少或者避免这种无意义的等待，就可以大幅提升服务的吞吐能力，从而提升服务的总体性能。</p><h4>2. 采用异步实现解决等待问题</h4><p>接下来我们看一下，如何用异步的思想来解决这个问题，实现同样的业务逻辑。</p><pre><code>TransferAsync(accountFrom, accountTo, amount, OnComplete()) {
+  // 异步从accountFrom的账户中减去相应的钱数，然后调用OnDebit方法。
+  AddAsync(accountFrom, -1 * amount, OnDebit(accountTo, amount, OnAllDone(OnComplete())))
+}
+// 扣减账户accountFrom完成后调用
+OnDebit(accountTo, amount, OnAllDone(OnComplete())) {
+  //  再异步把减去的钱数加到accountTo的账户中，然后执行OnAllDone方法
+  AddAsync(accountTo, amount, OnAllDone(OnComplete()))
+}
+// 转入账户accountTo完成后调用
+OnAllDone(OnComplete()) {
+  OnComplete()
+}
+</code></pre><p>细心的你可能已经注意到了，TransferAsync服务比Transfer多了一个参数，并且这个参数传入的是一个回调方法OnComplete()（虽然Java语言并不支持将方法作为方法参数传递，但像JavaScript等很多语言都具有这样的特性，在Java语言中，也可以通过传入一个回调类的实例来变相实现类似的功能）。</p><p>这个TransferAsync()方法的语义是：请帮我执行转账操作，当转账完成后，请调用OnComplete()方法。调用TransferAsync的线程不必等待转账完成就可以立即返回了，待转账结束后，TransferService自然会调用OnComplete()方法来执行转账后续的工作。</p><p>异步的实现过程相对于同步来说，稍微有些复杂。我们先定义2个回调方法：</p><ul>
+<li><strong>OnDebit()</strong>：扣减账户accountFrom完成后调用的回调方法；</li>
+<li><strong>OnAllDone()</strong>：转入账户accountTo完成后调用的回调方法。</li>
+</ul><p>整个异步实现的语义相当于：</p><ol>
+<li>异步从accountFrom的账户中减去相应的钱数，然后调用OnDebit方法；</li>
+<li>在OnDebit方法中，异步把减去的钱数加到accountTo的账户中，然后执行OnAllDone方法；</li>
+<li>在OnAllDone方法中，调用OnComplete方法。</li>
+</ol><p>绘制成时序图是这样的：</p><p><img src="https://static001.geekbang.org/resource/image/38/0d/38ab8de8fbfaf4cd4b34fbd9ddd3360d.jpg" alt=""></p><p>你会发现，异步化实现后，整个流程的时序和同步实现是完全一样的，<strong>区别只是在线程模型上由同步顺序调用改为了异步调用和回调的机制。</strong></p><p>接下来我们分析一下异步实现的性能，由于流程的时序和同步实现是一样，在低请求数量的场景下，平均响应时延一样是100ms。在超高请求数量场景下，异步的实现不再需要线程等待执行结果，只需要个位数量的线程，即可实现同步场景大量线程一样的吞吐量。</p><p>由于没有了线程的数量的限制，总体吞吐量上限会大大超过同步实现，并且在服务器CPU、网络带宽资源达到极限之前，响应时延不会随着请求数量增加而显著升高，几乎可以一直保持约100ms的平均响应时延。</p><p>看，这就是异步的魔力。</p><h2>简单实用的异步框架: CompletableFuture</h2><p>在实际开发时，我们可以使用异步框架和响应式框架，来解决一些通用的异步编程问题，简化开发。Java中比较常用的异步框架有Java8内置的<a href="https://docs.oracle.com/javase/8/docs/api/java/util/concurrent/CompletableFuture.html">CompletableFuture</a>和ReactiveX的<a href="https://github.com/ReactiveX/RxJava">RxJava</a>，我个人比较喜欢简单实用易于理解的CompletableFuture，但是RxJava的功能更加强大。有兴趣的同学可以深入了解一下。</p><p>Java 8中新增了一个非常强大的用于异步编程的类：CompletableFuture，几乎囊获了我们在开发异步程序的大部分功能，使用CompletableFuture很容易编写出优雅且易于维护的异步代码。</p><p>接下来，我们来看下，如何用CompletableFuture实现的转账服务。</p><p>首先，我们用CompletableFuture定义2个微服务的接口：</p><pre><code>/**
+ * 账户服务
+ */
+public interface AccountService {
+    /**
+     * 变更账户金额
+     * @param account 账户ID
+     * @param amount 增加的金额，负值为减少
+     */
+    CompletableFuture&lt;Void&gt; add(int account, int amount);
+}
+</code></pre><pre><code>/**
+ * 转账服务
+ */
+public interface TransferService {
+    /**
+     * 异步转账服务
+     * @param fromAccount 转出账户
+     * @param toAccount 转入账户
+     * @param amount 转账金额，单位分
+     */
+    CompletableFuture&lt;Void&gt; transfer(int fromAccount, int toAccount, int amount);
+}
+</code></pre><p>可以看到这两个接口中定义的方法的返回类型都是一个带泛型的CompletableFeture，尖括号中的泛型类型就是真正方法需要返回数据的类型，我们这两个服务不需要返回数据，所以直接用Void类型就可以。</p><p>然后我们来实现转账服务：</p><pre><code>/**
+ * 转账服务的实现
+ */
+public class TransferServiceImpl implements TransferService {
+    @Inject
+    private  AccountService accountService; // 使用依赖注入获取账户服务的实例
+    @Override
+    public CompletableFuture&lt;Void&gt; transfer(int fromAccount, int toAccount, int amount) {
+      // 异步调用add方法从fromAccount扣减相应金额
+      return accountService.add(fromAccount, -1 * amount)
+      // 然后调用add方法给toAccount增加相应金额
+      .thenCompose(v -&gt; accountService.add(toAccount, amount));    
+    }
+}
+</code></pre><p>在转账服务的实现类TransferServiceImpl里面，先定义一个AccountService实例，这个实例从外部注入进来，至于怎么注入不是我们关心的问题，就假设这个实例是可用的就好了。</p><p>然后我们看实现transfer()方法的实现，我们先调用一次账户服务accountService.add()方法从fromAccount扣减响应的金额，因为add()方法返回的就是一个CompletableFeture对象，可以用CompletableFeture的thenCompose()方法将下一次调用accountService.add()串联起来，实现异步依次调用两次账户服务完整转账。</p><p>客户端使用CompletableFuture也非常灵活，既可以同步调用，也可以异步调用。</p><pre><code>public class Client {
+    @Inject
+    private TransferService transferService; // 使用依赖注入获取转账服务的实例
+    private final static int A = 1000;
+    private final static int B = 1001;
+
+    public void syncInvoke() throws ExecutionException, InterruptedException {
+        // 同步调用
+        transferService.transfer(A, B, 100).get();
+        System.out.println(&quot;转账完成！&quot;);
+    }
+
+    public void asyncInvoke() {
+        // 异步调用
+        transferService.transfer(A, B, 100)
+                .thenRun(() -&gt; System.out.println(&quot;转账完成！&quot;));
+    }
+}
+</code></pre><p>在调用异步方法获得返回值CompletableFuture对象后，既可以调用CompletableFuture的get方法，像调用同步方法那样等待调用的方法执行结束并获得返回值，也可以像异步回调的方式一样，调用CompletableFuture那些以then开头的一系列方法，为CompletableFuture定义异步方法结束之后的后续操作。比如像上面这个例子中，我们调用thenRun()方法，参数就是将转账完成打印在控台上这个操作，这样就可以实现在转账完成后，在控制台打印“转账完成！”了。</p><h2>小结</h2><p>简单的说，异步思想就是，<strong>当我们要执行一项比较耗时的操作时，不去等待操作结束，而是给这个操作一个命令：“当操作完成后，接下来去执行什么。”</strong></p><p>使用异步编程模型，虽然并不能加快程序本身的速度，但可以减少或者避免线程等待，只用很少的线程就可以达到超高的吞吐能力。</p><p>同时我们也需要注意到异步模型的问题：相比于同步实现，异步实现的复杂度要大很多，代码的可读性和可维护性都会显著的下降。虽然使用一些异步编程框架会在一定程度上简化异步开发，但是并不能解决异步模型高复杂度的问题。</p><p>异步性能虽好，但一定不要滥用，只有类似在像消息队列这种业务逻辑简单并且需要超高吞吐量的场景下，或者必须长时间等待资源的地方，才考虑使用异步模型。如果系统的业务逻辑比较复杂，在性能足够满足业务需求的情况下，采用符合人类自然的思路且易于开发和维护的同步模型是更加明智的选择。</p><h2>思考题</h2><p>课后给你留2个思考题：</p><p>第一个思考题是，我们实现转账服务时，并没有考虑处理失败的情况。你回去可以想一下，在异步实现中，如果调用账户服务失败时，如何将错误报告给客户端？在两次调用账户服务的Add方法时，如果某一次调用失败了，该如何处理才能保证账户数据是平的？</p><p>第二个思考题是，在异步实现中，回调方法OnComplete()是在什么线程中运行的？我们是否能控制回调方法的执行线程数？该如何做？欢迎在留言区写下你的想法。</p><p>感谢阅读，如果你觉得这篇文章对你有帮助的话，也欢迎把它分享给你的朋友。</p><p><img src="https://static001.geekbang.org/resource/image/de/23/de0a489e6b4fa9a49450bf9197593423.jpg" alt=""></p><h2>精选留言：</h2>
+        <ul>
+        
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            senekis  2019-08-13 08:33:16
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            老师，我一直有一个困惑，就是想不明白为何异步可以节省线程。每次发起一个异步调用不都会创建一个新的线程吗？我理解了好几次，感觉只是异步处理线程在等待时可以让出时间片给其他线程运行啊？一直想不明白这个问题，困扰了好久，求老师解惑。 [4赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            笑傲流云  2019-08-13 13:24:31
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            个人的思路，欢迎老师点评下哈。<br>1，调用账户失败，可以在异步callBack里执行通知客户端的逻辑；<br>2，如果是第一次失败，那后面的那一步就不用执行了，所以转账失败；如果是第一次成功但是第二次失败，首先考虑重试，如果转账服务是幂等的,可以考虑一定次数的重试，如果不能重试，可以考虑采用补偿机制，undo第一次的转账操作。<br>3，CompletableFuture默认是在ForkjoinPool commonpool里执行的，也可以指定一个Executor线程池执行，借鉴guava的ListenableFuture的时间，回调可以指定线程池执行，这样就能控制这个线程池的线程数目了。 [2赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            不会爬树的熊  2019-08-13 09:45:24
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            第一个问题: 俺觉着吧，账户服务那噶如果能增加一个查询服务，超时+调用失败都可以通过查询确认当前账户状态，延后再决定下面儿咋处理。<br><br>第二个问题:就是老师基础篇聊的幂等方案么+请求顺序的方案么<br><br>谢谢老师给点评 [1赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            蓝魔丶  2019-08-13 08:47:09
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            老师，转账例子代码中给转入账号加钱写错了吧 [1赞]
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            DAV 🍃  2019-08-13 15:39:18
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            请教一下，在整个消息队列的场景里面怎么融合异步调用？举例，A发送消息到消息队列，消费进程处理后如何通过回调形式返回结果给A?  
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            Better me  2019-08-13 14:35:11
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            对于思考题:<br>1、应该可以通过编程式事物来保证数据的完整性。如何将错误结果返回给客户端，感觉这边和老师上次答疑网关如何接收服务端秒杀结果有点类似，通过方法回调，在回调方法中保存下转账成功或失败<br>2、在异步实现中，回调方法 OnComplete()在执行OnAllDone()回调方法的那个线程，可以通过一个异步线程池去控制回调方法的线程数，如Spring中的async就是通过结合线程池来实现异步调用<br>看了两遍才稍微有点思路，老师有空看看 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            川杰  2019-08-13 12:27:07
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            老师，请教个问题，吞吐量增加可以理解，因为请求发生后就直接返回了，从而避免了后续等待的延时；但是，以今天内容为例：<br>1、TransferAsync请求发生，直接返回，并开启新线程处理OnDebit函数；<br>2、OnDebit处理完毕，开启新线程处理OnAllDone函数；<br>3、OnAllDone函数处理完毕；<br>那么，从宏观来看，线程数量是不是要比同步多很多？<br>还有一个问题，调用方如何得知转账成功？前台开启一个新线程去轮询吗？ 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            许童童  2019-08-13 11:46:51
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            如何将错误报告给客户端？<br>javascript中用.catch捕获异常<br><br>在两次调用账户服务的 Add 方法时，如果某一次调用失败了，该如何处理才能保证账户数据是平的？<br>事务补偿 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            亚洲舞王.尼古拉斯.赵四  2019-08-13 11:27:48
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            1.老师，能否解释一下为什么“使用异步编程模型之后，在少量请求之下，时延依旧是100ms，但是在大量请求之下，异步的实现不需要等待线程的执行结果”？少量请求不也不需要等待吗<br>2.如果使用异步方式实现，我的onComplete()方法在另一个线程里执行，我怎么通知我的客户端我执行成功还是失败呢？ 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            广训  2019-08-13 09:34:07
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            accountService如果本身是自己处理逻辑，那将其放入一个事务中就解决部分失败。如果调用三方服务，就比较麻烦。需要把两步操作都留存，失败的列表每天都要处理。<br><br>一般都有专门的异步线程池来运行异步task任务，比如spring 的async。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            Jxin  2019-08-13 09:28:55
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            1.提个问题，为什么要1w个线程？java的线程模型不是1:1的吗，实际在跑的线程仅有核数*2，1w这个数量不是造成了内存浪费和上下文切换成本吗。<br>2.异步异常回传，并传回当前操作绑定在线程本地空间的事务实例。只有当两次都成功才提交两个add的事务。（事务不能声明，只能手动开启和提交了） 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            A:春哥大魔王  2019-08-13 09:19:46
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            jdk1.8之前没有completablefuture应该用什么搞异步呢？ 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            盛  2019-08-13 09:11:01
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+               其实异步减少的是等待时间。关于第一个思考题：调用失败是不是就可以抛出error，直接不执行第一步；代码中是否少了相应的查询操作进行核对啊，否则万一就根本没有执行成功呢。操作完成后相应的查询核对应当时候放到了后面吧：有问题再进行相应的类似于回滚之类的操作。<br>    第二个问题oncomplete()在什么线程中执行这个不是很清楚：不过我觉得可以通过线程去控制回调方法的执行线程数，具体实现方式就暂时还没想到。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            HadesFX  2019-08-13 09:00:24
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            1.可以增加异步调用后的返回值用来判断是否成功。<br>2.应该是存在一个默认线程池，使用线程池中的线程，可能存在一个配置自定义线程池的方法用来定制控制数量。<br>不知道理解的对不对。 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            业余草  2019-08-13 08:47:40
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            异步虽好，但使用场景有限！ 
+        </div>
+        
+    </div>
+</li>
+            
+<br/>
+
+<li>
+    <div>
+        <div style="color: #888;font-size:15.25px;font-weight:400;line-height:1.2">
+            白小白  2019-08-13 08:28:11
+        </div>
+        <div style="color:#353535;font-weight:400;white-space:normal;word-break:break-all;line-height:1.6">
+            嗯……第一遍有点懵……我再来两遍……再回答思考问题…… 
+        </div>
+        
+    </div>
+</li>
+            </ul>
+</div>
+</body>
+</html>
